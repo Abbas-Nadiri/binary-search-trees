@@ -126,10 +126,26 @@ class Tree {
         }
         return node;
     }
+    
+    levelOrder(callback) {
+        let queue = [];
+        queue.push(this.root);
+        while (queue.length !== 0) {
+            if (queue[0].left) {
+                queue.push(queue[0].left);
+            }
+            if (queue[0].right) {
+                queue.push(queue[0].right);
+            }
+            callback(queue.shift());
+        }
+    }
 }
 
 
 let tree = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
-tree.insert(24);
 prettyPrint(tree.root);
-console.log(tree.find(2324));
+function log(item) {
+    return console.log(item.data);
+}
+tree.levelOrder(log);
