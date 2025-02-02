@@ -24,11 +24,13 @@ class Tree {
         this.array = array;
         this.root = this.buildTree(this.array);
     }
+
     sortArray(array) {    //sorts array and removes duplicates
         let sorted = array.sort((a,b) => a - b);
         return [...new Set(sorted)];
 
     }
+
     buildTree(array) {
         if (array.length == 0) {
             return null;
@@ -48,9 +50,68 @@ class Tree {
 
         return rootNode;
     }
+
+    insert(value) {
+        this._insertRecursively(this.root, value);
+    }
+
+    _insertRecursively(node, value) {
+        if (value < node.data) {
+            if (node.left) {
+                return this._insertRecursively(node.left, value);
+            };
+            node.left = new Node(value);
+            return;
+        } else if (value > node.data) {
+            if (node.right) {
+                return this._insertRecursively(node.right, value);
+            };
+            node.right = new Node(value);
+            return;
+        }
+        console.log("Cannot add duplicate value to tree.");
+    }
+
+    remove(value) {
+        this.root = this._removeRecursively(this.root, value);
+    }
+
+    _removeRecursively(node, value) {
+        if (node === null) {
+            return null; //node not found
+        }
+
+        if (value > node.data) {
+            node.right = this._removeRecursively(node.right, value);
+        } else if (value < node.data) {
+            node.left = this._removeRecursively(node.left, value);
+        } else {
+            if (node.left === null && node.right === null) { //leaf node case
+                return null;
+            }
+
+            if (node.left === null) { //only one child case
+                return node.right;
+            } else if (node.right === null) {
+                return node.left;
+            }
+
+            //two children case
+            let tempNode = this._findMinNode(node.right);
+            node.data = tempNode.data;
+            node.right = this._removeRecursively(node.right, tempNode.data);
+        } 
+        return node;
+    }
+
+    _findMinNode(node) {
+        while (node.left !== null) {
+            node = node.left;
+        }
+        return node;
+    }
 }
 
 
-
 let tree = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
-prettyPrint(tree.buildTree(tree.array));
+tree.insert(24);
