@@ -110,8 +110,26 @@ class Tree {
         }
         return node;
     }
+
+    find(value){
+        return this._findIteratively(value, this.root);
+    }
+    
+    _findIteratively(value, node) {
+        if (node === null) { // value doesn't exist in tree
+            return null;
+        }
+        if (value > node.data) {
+            return this._findIteratively(value, node.right);
+        } else if (value < node.data) {
+            return this._findIteratively(value, node.left);
+        }
+        return node;
+    }
 }
 
 
 let tree = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
 tree.insert(24);
+prettyPrint(tree.root);
+console.log(tree.find(2324));
